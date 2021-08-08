@@ -47,12 +47,22 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     var screenSize = MediaQuery.of(context).size;
     return Center(
         child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Column(
-          children: [
-            drankCounterText(context),
-          ],
+        Spacer(),
+        Container(
+          child: drankCounterText(context),
+        ),
+        Spacer(flex: 1),
+        Text(
+          "Congratulations! You reached the daily goal!",
+          style: Theme.of(context)
+              .textTheme
+              .headline6!
+              .copyWith(color: Colors.greenAccent),
+        ),
+        Spacer(
+          flex: 2,
         ),
         GestureDetector(
           onTapDown: (_) {
@@ -74,6 +84,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
             animationController: this.controller,
           ),
         ),
+        Spacer()
       ],
     ));
   }
