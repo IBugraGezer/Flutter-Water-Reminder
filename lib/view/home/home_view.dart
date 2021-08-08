@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:water_reminder/utils/SharedPreferencesHelper.dart';
 import 'package:water_reminder/view/home/components/counter.dart';
 import 'package:water_reminder/components/top_bar.dart';
 
@@ -16,7 +17,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   double time = 3;
   double currentTime = 3;
 
-  int drankWaterCounter = 5;
+  bool isGoalReached = false;
+
+  int? drankWaterCounter;
 
   late Timer timer;
   late AnimationController controller;
@@ -30,16 +33,59 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
         setState(() {});
       });
 
-    controller.addStatusListener((status) {
+    controller.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
-        setState(() {
-          drankWaterCounter += 1;
-        });
+        await SharedPreferencesHelper.increaseTodayDrinks();
+        drankWaterCounter =
+            drankWaterCounter == null ? 0 : drankWaterCounter! + 1;
+
+        checkIsGoalReached();
+
+        setState(() {});
+
         controller.reset();
       }
     });
 
+    setDrankWaterCounter();
+
+    checkIsGoalReached();
+
     super.initState();
+  }
+
+  Future<void> setDrankWaterCounter() async {
+    SharedPreferencesHelper.getLastDrinkWaterDate()
+        .then((lastDrinkWaterDateAsMilliSeconds) async {
+      DateTime lastDrinkWaterDate = DateTime.fromMillisecondsSinceEpoch(
+          lastDrinkWaterDateAsMilliSeconds!);
+      int differenceBetweenNowAndLastDrinkDate =
+          DateTime.now().difference(lastDrinkWaterDate).inDays;
+
+      if (differenceBetweenNowAndLastDrinkDate < 1) {
+        drankWaterCounter = (await SharedPreferencesHelper.getTodayDrinks())!;
+        setState(() {});
+      } else {
+        SharedPreferencesHelper.resetTodayDrinks();
+        SharedPreferencesHelper.setLastDrinkWaterDate(
+            DateTime.now().millisecondsSinceEpoch);
+        drankWaterCounter = 0;
+      }
+    });
+  }
+
+  Future<void> checkIsGoalReached() async {
+    SharedPreferencesHelper.getTodayDrinks().then((todayDrinks) async {
+      int? goal = await SharedPreferencesHelper.getGoal();
+      print(todayDrinks);
+      print("-------------");
+      print(goal);
+      if (todayDrinks! >= goal!) {
+        setState(() {
+          isGoalReached = true;
+        });
+      }
+    });
   }
 
   @override
@@ -54,13 +100,14 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
           child: drankCounterText(context),
         ),
         Spacer(flex: 1),
-        Text(
-          "Congratulations! You reached the daily goal!",
-          style: Theme.of(context)
-              .textTheme
-              .headline6!
-              .copyWith(color: Colors.greenAccent),
-        ),
+        if (isGoalReached)
+          Text(
+            "Congratulations! You reached the daily goal!",
+            style: Theme.of(context)
+                .textTheme
+                .headline6!
+                .copyWith(color: Colors.greenAccent),
+          ),
         Spacer(
           flex: 2,
         ),

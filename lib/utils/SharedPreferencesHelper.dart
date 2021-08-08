@@ -15,4 +15,28 @@ class SharedPreferencesHelper {
     // ignore: await_only_futures
     return await _prefs!.getInt("goal");
   }
+
+  static setLastDrinkWaterDate(int dateAsMilliSeconds) {
+    _prefs!.setInt("lastDrinkWaterDate", dateAsMilliSeconds);
+  }
+
+  static Future<int?> getLastDrinkWaterDate() async {
+    // ignore: await_only_futures
+    return await _prefs!.getInt("lastDrinkWaterDate") ?? 0;
+  }
+
+  static increaseTodayDrinks() async {
+    int? currentTodayDrink = await getTodayDrinks();
+    print(currentTodayDrink);
+    _prefs!.setInt("todayDrinks", currentTodayDrink! + 1);
+  }
+
+  static resetTodayDrinks() async {
+    _prefs!.setInt("todayDrinks", 0);
+  }
+
+  static Future<int?> getTodayDrinks() async {
+    // ignore: await_only_futures
+    return await _prefs!.getInt("todayDrinks") ?? 0;
+  }
 }
