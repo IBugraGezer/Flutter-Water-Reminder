@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class DailyGoalSimplePreferences {
+class SharedPreferencesHelper {
   static SharedPreferences? _prefs;
 
   static init() async {
