@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:water_reminder/utils/SharedPreferencesHelper.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -15,8 +16,14 @@ class _SettingsState extends State<Settings> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    SharedPreferencesHelper.getGoal().then((value) {
+      print(value);
+      setState(() {
+        this.goalCounterValue = value!;
 
-    goalCounterController.text = "0";
+        goalCounterController.text = value.toString();
+      });
+    });
   }
 
   @override
@@ -41,6 +48,7 @@ class _SettingsState extends State<Settings> {
                 onPressed: () {
                   setState(() {
                     goalCounterValue += 1;
+                    setGoal();
                     goalCounterController.text = goalCounterValue.toString();
                   });
                 },
@@ -57,6 +65,7 @@ class _SettingsState extends State<Settings> {
                 onPressed: () {
                   setState(() {
                     goalCounterValue -= 1;
+                    setGoal();
                     goalCounterController.text = goalCounterValue.toString();
                   });
                 },
@@ -67,5 +76,9 @@ class _SettingsState extends State<Settings> {
         ],
       ),
     );
+  }
+
+  void setGoal() {
+    SharedPreferencesHelper.setGoal(goalCounterValue);
   }
 }
