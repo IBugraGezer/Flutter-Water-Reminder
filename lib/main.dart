@@ -1,10 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:water_reminder/components/top_bar.dart';
+import 'package:water_reminder/utils/SharedPreferencesHelper.dart';
 import 'package:water_reminder/view/home/home_view.dart';
 import 'package:water_reminder/view/settings/settings_view.dart';
 
-void main() {
-  runApp(MyApp());
+Future<void> main() async {
+  await runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+
+      await SharedPreferencesHelper.init();
+      runApp(MyApp());
+    },
+    (error, st) => print(error),
+  );
 }
 
 class MyApp extends StatelessWidget {
