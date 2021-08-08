@@ -45,44 +45,37 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: topBar(context),
-      backgroundColor: Theme.of(context).primaryColor,
-      bottomNavigationBar: Container(
-        margin: EdgeInsets.only(bottom: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text("Made By Burra")],
-        ),
-      ),
-      body: Center(
+    return Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Column(
           children: [
-            Column(
-              children: [
-                drankCounterText(context),
-              ],
-            ),
-            GestureDetector(
-              onTapDown: (_) {
-                controller.forward();
-              },
-              onTapUp: (_) {
-                if (controller.status == AnimationStatus.forward) {
-                  controller.reverse();
-                }
-              },
-              child: Glass(
-                screenSize: screenSize,
-                progress: progress,
-                animationController: this.controller,
-              ),
-            ),
+            drankCounterText(context),
           ],
         ),
-      ),
-    );
+        GestureDetector(
+          onTapDown: (_) {
+            controller.forward();
+          },
+          onTapCancel: () {
+            if (controller.status == AnimationStatus.forward) {
+              controller.reverse();
+            }
+          },
+          onTapUp: (_) {
+            if (controller.status == AnimationStatus.forward) {
+              controller.reverse();
+            }
+          },
+          child: Glass(
+            screenSize: screenSize,
+            progress: progress,
+            animationController: this.controller,
+          ),
+        ),
+      ],
+    ));
   }
 
   void dispose() {
