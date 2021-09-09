@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:water_reminder/utils/SharedPreferencesHelper.dart';
 import 'package:water_reminder/view/home/components/counter.dart';
-import 'package:water_reminder/components/top_bar.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -63,13 +62,16 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
           DateTime.now().difference(lastDrinkWaterDate).inDays;
 
       if (differenceBetweenNowAndLastDrinkDate < 1) {
-        drankWaterCounter = (await SharedPreferencesHelper.getTodayDrinks())!;
+        this.drankWaterCounter =
+            (await SharedPreferencesHelper.getTodayDrinks()) ?? 0;
         setState(() {});
       } else {
         SharedPreferencesHelper.resetTodayDrinks();
         SharedPreferencesHelper.setLastDrinkWaterDate(
             DateTime.now().millisecondsSinceEpoch);
-        drankWaterCounter = 0;
+        setState(() {
+          this.drankWaterCounter = 0;
+        });
       }
     });
   }
@@ -77,10 +79,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   Future<void> checkIsGoalReached() async {
     SharedPreferencesHelper.getTodayDrinks().then((todayDrinks) async {
       int? goal = await SharedPreferencesHelper.getGoal();
-      print(todayDrinks);
-      print("-------------");
-      print(goal);
-      if (todayDrinks! >= goal!) {
+      if (goal != null && todayDrinks! >= goal) {
         setState(() {
           isGoalReached = true;
         });
@@ -143,7 +142,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
 
   Text drankCounterText(BuildContext context) {
     return Text(
-      "You drank " + drankWaterCounter.toString() + " glasses of water today",
+      "You drank " +
+          (drankWaterCounter ?? 0).toString() +
+          " glasses of water today",
       style: Theme.of(context).textTheme.headline6,
     );
   }

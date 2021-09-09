@@ -14,14 +14,12 @@ class _SettingsState extends State<Settings> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     SharedPreferencesHelper.getGoal().then((value) {
-      print(value);
       setState(() {
-        this.goalCounterValue = value!;
+        this.goalCounterValue = (value == null) ? 0 : value;
 
-        goalCounterController.text = value.toString();
+        goalCounterController.text = this.goalCounterValue.toString();
       });
     });
   }
@@ -33,48 +31,62 @@ class _SettingsState extends State<Settings> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            "Daily Goal",
-            style: Theme.of(context)
-                .textTheme
-                .headline5!
-                .copyWith(color: Colors.black),
-          ),
+          goalTitle(context),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    goalCounterValue += 1;
-                    setGoal();
-                    goalCounterController.text = goalCounterValue.toString();
-                  });
-                },
-                icon: Icon(Icons.add),
-              ),
-              Container(
-                  width: deviceSize.width * 0.50,
-                  child: TextField(
-                      controller: goalCounterController,
-                      enabled: false,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline6)),
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    goalCounterValue -= 1;
-                    setGoal();
-                    goalCounterController.text = goalCounterValue.toString();
-                  });
-                },
-                icon: Icon(Icons.remove),
-              ),
+              goalIncreaseButton(),
+              goalText(deviceSize, context),
+              goalDecreaseButton(),
             ],
           )
         ],
       ),
+    );
+  }
+
+  Text goalTitle(BuildContext context) {
+    return Text(
+      "Daily Goal",
+      style:
+          Theme.of(context).textTheme.headline5!.copyWith(color: Colors.black),
+    );
+  }
+
+  Container goalText(Size deviceSize, BuildContext context) {
+    return Container(
+        width: deviceSize.width * 0.50,
+        child: TextField(
+            controller: goalCounterController,
+            enabled: false,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headline6));
+  }
+
+  IconButton goalDecreaseButton() {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          goalCounterValue -= 1;
+          setGoal();
+          goalCounterController.text = goalCounterValue.toString();
+        });
+      },
+      icon: Icon(Icons.remove),
+    );
+  }
+
+  IconButton goalIncreaseButton() {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          goalCounterValue += 1;
+          setGoal();
+          goalCounterController.text = goalCounterValue.toString();
+        });
+      },
+      icon: Icon(Icons.add),
     );
   }
 
