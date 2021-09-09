@@ -1,17 +1,28 @@
 import 'dart:async';
+import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:water_reminder/components/top_bar.dart';
 import 'package:water_reminder/utils/SharedPreferencesHelper.dart';
 import 'package:water_reminder/view/home/home_view.dart';
 import 'package:water_reminder/view/settings/settings_view.dart';
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+
+void printHello() {
+  final DateTime now = DateTime.now();
+  final int isolateId = Isolate.current.hashCode;
+  print("[$now] Hello, world! isolate=$isolateId function='$printHello'");
+}
 
 Future<void> main() async {
   await runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-
+      final int helloAlarmID = 0;
+      await AndroidAlarmManager.initialize();
       await SharedPreferencesHelper.init();
+      await AndroidAlarmManager.periodic(
+          const Duration(seconds: 1), helloAlarmID, printHello);
       runApp(MyApp());
     },
     (error, st) => print(error),
