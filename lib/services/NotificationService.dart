@@ -36,8 +36,9 @@ class NotificationService {
             showWhen: false);
     const NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
+    DateTime now = DateTime.now();
     await flutterLocalNotificationsPlugin.show(
-        0, 'plain title', 'plain body', platformChannelSpecifics,
+        0, 'plain title', 'plain body --- $now', platformChannelSpecifics,
         payload: 'item x');
   }
 }

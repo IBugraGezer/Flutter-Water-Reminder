@@ -3,6 +3,7 @@
    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
    <uses-permission android:name="android.permission.WAKE_LOCK"/>
    <application
+        android:name = "io.flutter.app.FlutterApplication"
         android:label="water_reminder"
         android:icon="@mipmap/ic_launcher">
         <activity
