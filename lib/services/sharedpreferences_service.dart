@@ -11,9 +11,8 @@ class SharedPreferencesService {
     _prefs!.setInt("goal", goal);
   }
 
-  static Future<int?> getGoal() async {
-    // ignore: await_only_futures
-    return await _prefs!.getInt("goal");
+  static int? getGoal() {
+    return _prefs?.getInt("goal") ?? 0;
   }
 
   static setLastDrinkWaterDate(int dateAsMilliSeconds) {
@@ -26,7 +25,7 @@ class SharedPreferencesService {
   }
 
   static increaseTodayDrinks() async {
-    int? currentTodayDrink = await getTodayDrinks();
+    int? currentTodayDrink = getTodayDrinks();
     print(currentTodayDrink);
     _prefs!.setInt("todayDrinks", currentTodayDrink! + 1);
   }
@@ -35,16 +34,15 @@ class SharedPreferencesService {
     _prefs!.setInt("todayDrinks", 0);
   }
 
-  static Future<int?> getTodayDrinks() async {
-    // ignore: await_only_futures
-    return await _prefs!.getInt("todayDrinks") ?? 0;
+  static int? getTodayDrinks() {
+    return _prefs?.getInt("todayDrinks") ?? 0;
   }
 
-  static isGoalReached() async {
-    int? todayDrinks = await getTodayDrinks();
-    int? goal = await getGoal();
+  static bool isGoalReached() {
+    int? todayDrinks = getTodayDrinks();
+    int? goal = getGoal();
     if (todayDrinks != null && goal != null)
-      return goal >= todayDrinks;
+      return todayDrinks >= goal;
     else
       return false;
   }
