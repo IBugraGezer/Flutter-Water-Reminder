@@ -38,7 +38,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
         drankWaterCounter =
             drankWaterCounter == null ? 0 : drankWaterCounter! + 1;
 
-        SharedPreferencesService.isGoalReached();
+        isGoalReached = SharedPreferencesService.isGoalReached();
 
         setState(() {});
 
@@ -49,7 +49,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     setDrankWaterCounter();
 
     setState(() {
-      SharedPreferencesService.isGoalReached();
+      isGoalReached = SharedPreferencesService.isGoalReached();
     });
 
     super.initState();
