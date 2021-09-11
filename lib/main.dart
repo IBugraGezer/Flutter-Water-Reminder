@@ -9,11 +9,13 @@ import 'package:water_reminder/view/home/home_view.dart';
 import 'package:water_reminder/view/settings/settings_view.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
-void periodicFunc() {
+void periodicFunc() async {
   final DateTime now = DateTime.now();
   final int isolateId = Isolate.current.hashCode;
   print("[$now] Hello, world! isolate=$isolateId function='$periodicFunc'");
-  NotificationService.sendNotification();
+  await SharedPreferencesService.init();
+  bool reached = SharedPreferencesService.isGoalReached();
+  if (!reached) NotificationService.sendReminderNotification();
 }
 
 Future<void> main() async {
@@ -23,7 +25,7 @@ Future<void> main() async {
   await NotificationService.initialize();
   await SharedPreferencesService.init();
   await AndroidAlarmManager.periodic(
-      const Duration(minutes: 2), helloAlarmID, periodicFunc);
+      const Duration(minutes: 15), helloAlarmID, periodicFunc);
   runApp(MyApp());
 }
 
