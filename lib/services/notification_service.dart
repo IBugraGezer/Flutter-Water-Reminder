@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
@@ -25,20 +24,23 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  static sendNotification() async {
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+  static sendNotification([String? title, String? body]) async {
+    DateTime now = DateTime.now();
+
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-            'your channel id', 'your channel name', 'your channel description',
+        AndroidNotificationDetails('channel_id', 'channel_name', 'channel_desc',
             importance: Importance.max,
             priority: Priority.high,
             showWhen: false);
-    const NotificationDetails platformChannelSpecifics =
+    NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
-    DateTime now = DateTime.now();
-    await flutterLocalNotificationsPlugin.show(
-        0, 'plain title', 'plain body --- $now', platformChannelSpecifics,
+
+    await flutterLocalNotificationsPlugin.show(0, title ?? 'plain title',
+        body ?? 'plain body --- $now', platformChannelSpecifics,
         payload: 'item x');
+  }
+
+  static sendReminderNotification() {
+    sendNotification("Time to drink!", "You've not reach your goal yet.");
   }
 }
