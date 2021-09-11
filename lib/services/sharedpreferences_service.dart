@@ -12,7 +12,7 @@ class SharedPreferencesService {
   }
 
   static int? getGoal() {
-    return _prefs?.getInt("goal") ?? 0;
+    return _prefs?.getInt("goal") ?? 3;
   }
 
   static setLastDrinkWaterDate(int dateAsMilliSeconds) {
