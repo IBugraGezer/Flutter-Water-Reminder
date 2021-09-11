@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:water_reminder/services/NotificationService.dart';
-import 'package:water_reminder/utils/SharedPreferencesHelper.dart';
+import 'package:water_reminder/services/notification_service.dart';
+import 'package:water_reminder/services/sharedpreferences_service.dart';
 import 'package:water_reminder/view/home/components/counter.dart';
 
 class HomeView extends StatefulWidget {
@@ -35,7 +35,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
 
     controller.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
-        await SharedPreferencesHelper.increaseTodayDrinks();
+        await SharedPreferencesService.increaseTodayDrinks();
         drankWaterCounter =
             drankWaterCounter == null ? 0 : drankWaterCounter! + 1;
 
@@ -55,7 +55,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   }
 
   Future<void> setDrankWaterCounter() async {
-    SharedPreferencesHelper.getLastDrinkWaterDate()
+    SharedPreferencesService.getLastDrinkWaterDate()
         .then((lastDrinkWaterDateAsMilliSeconds) async {
       DateTime lastDrinkWaterDate = DateTime.fromMillisecondsSinceEpoch(
           lastDrinkWaterDateAsMilliSeconds!);
@@ -64,11 +64,11 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
 
       if (differenceBetweenNowAndLastDrinkDate < 1) {
         this.drankWaterCounter =
-            (await SharedPreferencesHelper.getTodayDrinks()) ?? 0;
+            (await SharedPreferencesService.getTodayDrinks()) ?? 0;
         setState(() {});
       } else {
-        SharedPreferencesHelper.resetTodayDrinks();
-        SharedPreferencesHelper.setLastDrinkWaterDate(
+        SharedPreferencesService.resetTodayDrinks();
+        SharedPreferencesService.setLastDrinkWaterDate(
             DateTime.now().millisecondsSinceEpoch);
         setState(() {
           this.drankWaterCounter = 0;
@@ -78,8 +78,8 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   }
 
   Future<void> checkIsGoalReached() async {
-    SharedPreferencesHelper.getTodayDrinks().then((todayDrinks) async {
-      int? goal = await SharedPreferencesHelper.getGoal();
+    SharedPreferencesService.getTodayDrinks().then((todayDrinks) async {
+      int? goal = await SharedPreferencesService.getGoal();
       if (goal != null && todayDrinks! >= goal) {
         setState(() {
           isGoalReached = true;

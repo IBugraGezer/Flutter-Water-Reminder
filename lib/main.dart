@@ -3,16 +3,16 @@ import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:water_reminder/components/top_bar.dart';
-import 'package:water_reminder/services/NotificationService.dart';
-import 'package:water_reminder/utils/SharedPreferencesHelper.dart';
+import 'package:water_reminder/services/notification_service.dart';
+import 'package:water_reminder/services/sharedpreferences_service.dart';
 import 'package:water_reminder/view/home/home_view.dart';
 import 'package:water_reminder/view/settings/settings_view.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
-void printHello() {
+void periodicFunc() {
   final DateTime now = DateTime.now();
   final int isolateId = Isolate.current.hashCode;
-  print("[$now] Hello, world! isolate=$isolateId function='$printHello'");
+  print("[$now] Hello, world! isolate=$isolateId function='$periodicFunc'");
   NotificationService.sendNotification();
 }
 
@@ -21,9 +21,9 @@ Future<void> main() async {
   final int helloAlarmID = 0;
   await AndroidAlarmManager.initialize();
   await NotificationService.initialize();
-  await SharedPreferencesHelper.init();
+  await SharedPreferencesService.init();
   await AndroidAlarmManager.periodic(
-      const Duration(minutes: 2), helloAlarmID, printHello);
+      const Duration(minutes: 2), helloAlarmID, periodicFunc);
   runApp(MyApp());
 }
 
