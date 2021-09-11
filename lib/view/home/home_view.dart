@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:water_reminder/services/notification_service.dart';
 import 'package:water_reminder/services/sharedpreferences_service.dart';
 import 'package:water_reminder/view/home/components/counter.dart';
 
@@ -39,7 +38,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
         drankWaterCounter =
             drankWaterCounter == null ? 0 : drankWaterCounter! + 1;
 
-        checkIsGoalReached();
+        SharedPreferencesService.isGoalReached();
 
         setState(() {});
 
@@ -49,7 +48,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
 
     setDrankWaterCounter();
 
-    checkIsGoalReached();
+    SharedPreferencesService.isGoalReached();
 
     super.initState();
   }
@@ -72,17 +71,6 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
             DateTime.now().millisecondsSinceEpoch);
         setState(() {
           this.drankWaterCounter = 0;
-        });
-      }
-    });
-  }
-
-  Future<void> checkIsGoalReached() async {
-    SharedPreferencesService.getTodayDrinks().then((todayDrinks) async {
-      int? goal = await SharedPreferencesService.getGoal();
-      if (goal != null && todayDrinks! >= goal) {
-        setState(() {
-          isGoalReached = true;
         });
       }
     });

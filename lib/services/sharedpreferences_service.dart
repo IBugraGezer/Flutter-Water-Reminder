@@ -39,4 +39,13 @@ class SharedPreferencesService {
     // ignore: await_only_futures
     return await _prefs!.getInt("todayDrinks") ?? 0;
   }
+
+  static isGoalReached() async {
+    int? todayDrinks = await getTodayDrinks();
+    int? goal = await getGoal();
+    if (todayDrinks != null && goal != null)
+      return goal >= todayDrinks;
+    else
+      return false;
+  }
 }
