@@ -10,7 +10,9 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   TextEditingController goalCounterController = TextEditingController();
-  int goalCounterValue = 0;
+  int goalCounterValue = 3;
+  int goalCounterMinValue = 3;
+  int goalCounterMaxMalue = 15;
 
   @override
   void initState() {
@@ -67,9 +69,11 @@ class _SettingsState extends State<Settings> {
     return IconButton(
       onPressed: () {
         setState(() {
-          goalCounterValue -= 1;
-          setGoal();
-          goalCounterController.text = goalCounterValue.toString();
+          if (goalCounterValue > goalCounterMinValue) {
+            goalCounterValue -= 1;
+            setGoal();
+            goalCounterController.text = goalCounterValue.toString();
+          }
         });
       },
       icon: Icon(Icons.remove),
@@ -80,9 +84,11 @@ class _SettingsState extends State<Settings> {
     return IconButton(
       onPressed: () {
         setState(() {
-          goalCounterValue += 1;
-          setGoal();
-          goalCounterController.text = goalCounterValue.toString();
+          if (goalCounterValue < goalCounterMaxMalue) {
+            goalCounterValue += 1;
+            setGoal();
+            goalCounterController.text = goalCounterValue.toString();
+          }
         });
       },
       icon: Icon(Icons.add),
