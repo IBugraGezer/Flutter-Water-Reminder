@@ -48,7 +48,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
 
     setDrankWaterCounter();
 
-    SharedPreferencesService.isGoalReached();
+    setState(() {
+      SharedPreferencesService.isGoalReached();
+    });
 
     super.initState();
   }
@@ -62,8 +64,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
           DateTime.now().difference(lastDrinkWaterDate).inDays;
 
       if (differenceBetweenNowAndLastDrinkDate < 1) {
-        this.drankWaterCounter =
-            (await SharedPreferencesService.getTodayDrinks()) ?? 0;
+        this.drankWaterCounter = SharedPreferencesService.getTodayDrinks() ?? 0;
         setState(() {});
       } else {
         SharedPreferencesService.resetTodayDrinks();

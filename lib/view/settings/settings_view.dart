@@ -15,12 +15,11 @@ class _SettingsState extends State<Settings> {
   @override
   void initState() {
     super.initState();
-    SharedPreferencesService.getGoal().then((value) {
-      setState(() {
-        this.goalCounterValue = (value == null) ? 0 : value;
+    int? goal = SharedPreferencesService.getGoal();
+    setState(() {
+      this.goalCounterValue = goal ?? 0;
 
-        goalCounterController.text = this.goalCounterValue.toString();
-      });
+      goalCounterController.text = this.goalCounterValue.toString();
     });
   }
 
